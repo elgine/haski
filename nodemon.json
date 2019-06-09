@@ -1,0 +1,9 @@
+{
+    "verbose": true,
+    "ignore": [
+        "**/*.spec.ts", 
+        "**/*.spec.js",
+        "**/src/client/*"
+    ],
+    "exec": "ts-node --project tsconfig.server.json"
+}
