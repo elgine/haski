@@ -5,8 +5,8 @@
 
 import Vector2d from './vector2d';
 import Matrix2d from './matrix2d';
-import computed, {getComputedInnerValue} from '@core/computed';
-import observable, {setObservableInnerValue} from '@core/observable';
+import computed, { getComputedInnerValue } from '@core/computed';
+import observable, { setObservableInnerValue } from '@core/observable';
 import Emitter from '@core/emitter';
 
 const composeComponents = {
