@@ -10,7 +10,7 @@
     "compilerOptions": {
         "typeRoots": ["./node_modules/@types", "./typings", "**/typings/**/*"],
         "sourceMap": true,
-        "module": "ESNext",
+        "module": "esnext",
         "target": "es5",
         "resolveJsonModule": true,
         "moduleResolution": "node",
@@ -25,43 +25,25 @@
             "es2017",
             "dom"
         ],
-        "baseUrl": "./",
+        "baseUrl": "./packages",
         "paths": {
-            "@haski": [
-                "./packages/haski/src"
+            "@haski*": [
+                "haski/src*"
             ],
-            "@haski/*": [
-                "./packages/haski/src/*"
+            "@gl*": [
+                "gl/src*"
             ],
-            "@gl": [
-                "./packages/gl/src"
+            "@core*": [
+                "core/src*"
             ],
-            "@gl/*": [
-                "./packages/gl/src/*"
+            "@ecs*": [
+                "ecs/src*"
             ],
-            "@core": [
-                "./packages/core/src"
+            "@maths*": [
+                "maths/src*"
             ],
-            "@core/*": [
-                "./packages/core/src/*"
-            ],
-            "@ecs": [
-                "./packages/ecs/src"
-            ],
-            "@ecs/*": [
-                "./packages/ecs/src/*"
-            ],
-            "@maths": [
-                "./packages/maths/src"
-            ],
-            "@maths/*": [
-                "./packages/maths/src/*"
-            ],
-            "@utils": [
-                "./packages/utils/src"
-            ],
-            "@utils/*": [
-                "./packages/utils/src/*"
+            "@utils*": [
+                "utils/src*"
             ]
         }
     },

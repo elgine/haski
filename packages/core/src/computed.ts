@@ -1,5 +1,5 @@
 export interface ComputedParams<T>{
-    expression?: string | ((key: string, val: T) => T);
+    expression?: string | ((val: T) => T);
 }
 
 const genComputedKey = (key: string) => `$$computed_${key}`;
@@ -31,9 +31,9 @@ function computed<T>({ expression }: ComputedParams<T>) {
                 let newVal = val;
                 if (expression) {
                     if (typeof expression === 'string') {
-                        newVal = this[expression] && this[expression](key, val);
+                        newVal = this[expression] && this[expression](val);
                     } else {
-                        newVal = expression.call(this, key, val);
+                        newVal = expression.call(this, val);
                     }
                 }
                 return newVal || val;

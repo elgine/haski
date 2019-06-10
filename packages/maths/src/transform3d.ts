@@ -96,10 +96,10 @@ export default class Transform3d extends Emitter {
     @observable({ onDirty: 'setMatrixDirty' })
     skxz: number = 0;
 
-    @computed({ expression: 'updateMatrix' })
+    @computed({ expression: 'computeMatrix' })
     matrix: Mat3d = Matrix3d.create();
 
-    @computed({ expression: 'updateMatrix' })
+    @computed({ expression: 'computeMatrix' })
     invMatrix: Mat3d = Matrix3d.create();
 
     /**
@@ -122,7 +122,7 @@ export default class Transform3d extends Emitter {
     /**
      * Update matrix according to translation, scale, rotation vectors
      */
-    updateMatrix() {
+    computeMatrix() {
         this.emit(Transform3d.ON_BEFORE_MATRIX_UPDATE, this);
         compose(this);
         this.emit(Transform3d.ON_MATRIX_UPDATED, this);

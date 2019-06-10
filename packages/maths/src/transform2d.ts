@@ -75,10 +75,10 @@ export default class Transform2d extends Emitter {
     @observable({ onDirty: 'setMatrixDirty' })
     sky: number = 0;
 
-    @computed({ expression: 'updateMatrix' })
+    @computed({ expression: 'computeMatrix' })
     matrix: Mat2d = Matrix2d.create();
 
-    @computed({ expression: 'updateMatrix' })
+    @computed({ expression: 'computeMatrix' })
     invMatrix: Mat2d = Matrix2d.create();
 
     /**
@@ -102,7 +102,7 @@ export default class Transform2d extends Emitter {
     /**
      * Update matrix according to translation, scale, rotation vectors
      */
-    updateMatrix() {
+    computeMatrix() {
         if (!this._matrixDirty) return;
         this.emit(Transform2d.ON_BEFORE_MATRIX_UPDATE, this);
         compose(this);

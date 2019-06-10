@@ -8,7 +8,7 @@ module.exports = (DEBUG, SSR, html = '', innerScript = '', scriptTags = '', link
             <meta http-equiv="X-UA-Compatible" content="ie=edge">
             <meta name="referrer" content="no-referrer"/>
             <style>
-                html, body, #app{
+                html, body{
                     padding: 0;
                     margin: 0;
                     width: 100%;
@@ -31,5 +31,5 @@ module.exports = (DEBUG, SSR, html = '', innerScript = '', scriptTags = '', link
         </script>
         ${scriptTags}
         </html>
-    `
+    `;
 };

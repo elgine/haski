@@ -5,6 +5,10 @@
 
 import { EPS } from './const';
 
+const delExtraSpace = (str: string) => {
+    return str.replace(/\s+/g, ' ');
+};
+
 /**
  * Affine matrix in 2d
  * @class
@@ -59,6 +63,50 @@ export default class Matrix2d extends Array<number> {
         out[Matrix2d.M32] = a[Matrix2d.M32];
         out[Matrix2d.M33] = a[Matrix2d.M33];
         return out;
+    }
+
+    static fromSvgMatrixString(v: string, out: Mat2d) {
+        Matrix2d.reset(out);
+        delExtraSpace(v).split(' ').forEach((action) => {
+            // Handle translate
+            if (/translateX\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.translate(out, [Number(action.replace(/(translateX)|(\(\s*)|(\s*\))/g, '')), 0]);
+            } else if (/translateY\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.translate(out, [0, Number(action.replace(/(translateY)|(\(\s*)|(\s*\))/g, ''))]);
+            } else if (/translate\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.translate(out, action.replace(/(translate)|(\(\s*)|(\s*\))/g, ' ').split(' ').map(Number));
+            }
+            // Handle scale
+            else if (/scaleX\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.scale(out, [Number(action.replace(/(scaleX)|(\(\s*)|(\s*\))/g, '')), 1]);
+            } else if (/scaleY\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.scale(out, [1, Number(action.replace(/(scaleY)|(\(\s*)|(\s*\))/g, ''))]);
+            } else if (/scale\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.scale(out, action.replace(/(translate)|(\(\s*)|(\s*\))/g, ' ').split(' ').map(Number));
+            }
+            // Handle skew
+            else if (/skewX\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.skew(out, [Number(action.replace(/(skewX)|(\(\s*)|(\s*\))/g, '')), 1]);
+            } else if (/skewY\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.scale([1, Number(action.replace(/(skewY)|(\(\s*)|(\s*\))/g, ''))], out);
+            } else if (/skew\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.skew(out, action.replace(/(skew)|(\(\s*)|(\s*\))/g, ' ').split(' ').map(Number));
+            }
+            // Handle rotate
+            else if (/rotate\(\s*.*\s*\)/g.test(action)) {
+                Matrix2d.rotate(out, Number(action.replace(/(rotate)|(\(\s*)|(\s*\))/g, '')));
+            }
+        });
+    }
+
+    static toSVGMatrix(v: Mat2d, svgM: DOMMatrix2DInit) {
+        svgM.a = v[0];
+        svgM.b = v[3];
+        svgM.c = v[1];
+        svgM.d = v[4];
+        svgM.e = v[2];
+        svgM.f = v[5];
+        return svgM;
     }
 
     static reset(out: Mat2d) {

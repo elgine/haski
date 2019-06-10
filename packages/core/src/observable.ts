@@ -1,6 +1,7 @@
 export interface ObservableParams<T>{
     setter?: (val: T, target: T) => T;
     equals?: (oldVal: T, newVal: T) => boolean;
+    onGet?: Function | string;
     onDirty?: string | Function;
     onChange?: string | Function;
 }
@@ -19,28 +20,39 @@ export const isObservable = (target: any, key: string) => {
     return Reflect.has(target, genObservableKey(key));
 };
 
-function observable<T>({ setter, equals, onDirty, onChange }: ObservableParams<T>) {
-    const onValChanged = (ctx: any, key: string, oldVal: T, newVal: T) => {
-        if (!onChange) return;
-        if (typeof onChange === 'string') {
-            ctx[onChange](key, oldVal, newVal);
+function observable<T>({ setter, equals, onDirty, onGet, onChange }: ObservableParams<T>) {
+    const onValGet = (ctx: any, val: T) => {
+        if (!onGet) return;
+        if (typeof onGet === 'string') {
+            ctx[onGet](val);
         } else {
-            onChange(key, oldVal, newVal);
+            onGet(val);
         }
     };
-    const onValDirty = (ctx: any, key: string) => {
+    const onValChanged = (ctx: any, oldVal: T, newVal: T) => {
+        if (!onChange) return;
+        if (typeof onChange === 'string') {
+            ctx[onChange](oldVal, newVal);
+        } else {
+            onChange(oldVal, newVal);
+        }
+    };
+    const onValDirty = (ctx: any) => {
         if (onDirty) {
             if (typeof onDirty === 'string') {
-                ctx[onDirty](key);
+                ctx[onDirty]();
             } else {
-                onDirty(key);
+                onDirty();
             }
         }
     };
     return function(target: Object, propertyKey: string) {
         let key = genObservableKey(propertyKey);
         Object.defineProperty(target, propertyKey, {
-            get() { return Reflect.get(this, key) },
+            get() {
+                onValGet(this, Reflect.get(this, key));
+                return Reflect.get(this, key);
+            },
             set(v: T) {
                 let oldVal = Reflect.get(this, key);
                 let newVal;
@@ -57,8 +69,8 @@ function observable<T>({ setter, equals, onDirty, onChange }: ObservableParams<T
                 }
                 if (changed) {
                     Reflect.set(this, key, newVal);
-                    onValDirty(this, propertyKey);
-                    onValChanged(this, propertyKey, oldVal, newVal);
+                    onValDirty(this);
+                    onValChanged(this, oldVal, newVal);
                 }
             }
         });

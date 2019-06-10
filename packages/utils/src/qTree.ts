@@ -7,7 +7,7 @@ import Pool from '@core/pool';
 import { AABB2d, OBB2d } from '@maths/bounds';
 
 export interface QTreeNodeItem{
-    id: number;
+    id: string;
     worldBounds: AABB2d;
 }
 
@@ -303,15 +303,15 @@ export default class QTree<T extends QTreeNodeItem> {
         });
     }
 
-    node(id: number) {
+    node(id: string) {
         return this._itemMap[id];
     }
 
-    map(id: number, node: QTreeNode<T>) {
+    map(id: string, node: QTreeNode<T>) {
         this._itemMap[id] = node;
     }
 
-    unmap(id: number) {
+    unmap(id: string) {
         delete this._itemMap[id];
     }
 
