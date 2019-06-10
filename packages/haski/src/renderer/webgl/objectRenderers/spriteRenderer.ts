@@ -4,10 +4,10 @@
 // https://opensource.org/licenses/MIT
 
 import ObjectRenderer from '../../objectRenderer';
-import Sprite from '../../../../renderObject/sprite';
+import Sprite from '../../../sprite/sprite';
 import GLRenderer from '../glRenderer';
 import Color from '@maths/color';
-import Texture from '../../../../base/texture';
+import Texture from '../../../core/texture';
 
 export default class SpriteRenderer implements ObjectRenderer<Sprite> {
 

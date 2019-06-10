@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import Renderer, { RendererParams } from '../renderer';
-import RenderObject from '../../../renderObject/renderObject';
+import RenderObject from '../../core/renderObject';
 import { AABB2d } from '@maths/bounds';
 import Color from '@maths/color';
 import { getCanvasRenderingContext } from '@utils/canvas';

@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import Path from './path';
-import { FillStyle } from '../base/fillStyle';
+import { FillStyle } from '../core/fillStyle';
 import GraphicsData from './graphicsData';
 
 export default class Graphics {

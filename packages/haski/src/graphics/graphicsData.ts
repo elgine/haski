@@ -4,8 +4,8 @@
 // https://opensource.org/licenses/MIT
 
 import Path from './path';
-import { FillStyle } from '../base/fillStyle';
-import PathDrawingStyle from '../base/pathDrawingStyle';
+import { FillStyle } from '../core/fillStyle';
+import PathDrawingStyle from '../core/pathDrawingStyle';
 import PathData from './pathData';
 import StrokePathData from './strokePathData';
 import FillPathData from './fillPathData';

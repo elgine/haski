@@ -9,11 +9,11 @@ import observable from '@core/observable';
 import Color from '@maths/color';
 import Vector2d from '@maths/vector2d';
 import { AABB2d } from '@maths/bounds';
-import RenderObject from './renderObject';
-import Region from '../base/region';
-import Texture from '../base/texture';
-import Size from '../base/size';
-import RenderTarget from '../render/base/renderTarget';
+import RenderObject from '../core/renderObject';
+import Region from '../core/region';
+import Texture from '../core/texture';
+import Size from '../core/size';
+import RenderTarget from '../core/renderTarget';
 
 export default class Sprite extends RenderObject {
 

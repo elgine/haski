@@ -7,7 +7,7 @@ import { getWebGLRenderingContext } from '@utils/canvas';
 import autobind from 'autobind-decorator';
 import Renderer, { RendererParams } from '../renderer';
 import RendererType from '../rendererType';
-import RenderObject from '../../../renderObject/renderObject';
+import RenderObject from '../../core/renderObject';
 import GLTextureManager from '@gl/glTextureManager';
 import GLShaderManager from '@gl/glShaderManager';
 import { AABB2d } from '@maths/bounds';

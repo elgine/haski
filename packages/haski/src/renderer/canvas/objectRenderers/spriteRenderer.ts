@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import ObjectRenderer from '../../objectRenderer';
-import Sprite from '../../../../renderObject/sprite';
+import Sprite from '../../../sprite/sprite';
 import CanvasRenderer from '../canvasRenderer';
 
 export default class SpriteRenderer implements ObjectRenderer<Sprite> {

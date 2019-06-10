@@ -1,7 +1,7 @@
-import Stage from '@haski/base/stage';
-import Sprite from '@haski/renderObject/sprite';
-import Renderer from '@haski/render/renderer/canvas/canvasRenderer';
-import Texture from '@haski/base/texture';
+import Stage from '@haski/core/stage';
+import Sprite from '@haski/sprite/sprite';
+import Renderer from '@haski/renderer/canvas/canvasRenderer';
+import Texture from '@haski/core/texture';
 
 const loadImage = (url: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {

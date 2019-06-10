@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import { createCanvas, getCanvasRenderingContext } from '@utils/canvas';
-import Texture from '../../base/texture';
+import Texture from './texture';
 import uuid from 'uuid/v4';
 
 export interface RenderTargetParams{

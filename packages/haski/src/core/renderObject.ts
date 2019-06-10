@@ -4,7 +4,7 @@ import observable from '@core/observable';
 import Transform2d from '@maths/transform2d';
 import { AABB2d } from '@maths/bounds';
 import Matrix2d from '@maths/matrix2d';
-import Stage from '../base/stage';
+import Stage from '../core/stage';
 
 const mat = Matrix2d.create();
 

@@ -7,12 +7,12 @@ import Color from '@maths/color';
 import { AABB2d } from '@maths/bounds';
 import { getCanvasRenderingContext } from '@utils/canvas';
 import RendererType from './rendererType';
-import Stage from '../../base/stage';
-import Size from '../../base/size';
-import RenderTarget, { RenderTargetParams } from '../base/renderTarget';
-import RenderObject from '../../renderObject/renderObject';
+import Stage from '../core/stage';
+import Size from '../core/size';
+import RenderTarget, { RenderTargetParams } from '../core/renderTarget';
+import RenderObject from '../core/renderObject';
 import ObjectRenderer from './objectRenderer';
-import DirtyRectCollector from '../../base/dirtyRectCollector';
+import DirtyRectCollector from '../core/dirtyRectCollector';
 
 export interface RendererParams extends RenderTargetParams{
     type?: RendererType;

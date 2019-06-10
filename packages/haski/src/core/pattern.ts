@@ -3,7 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import Texture from '../../base/texture';
+import Texture from './texture';
 
 export type PatternRepeation = 'repeat-x' | 'repeat-y' | 'repeat' | 'no-repeat';
 

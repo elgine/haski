@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import SpatialManager from './spatialManager';
-import RenderObject from '../renderObject/renderObject';
+import RenderObject from './renderObject';
 import autobind from 'autobind-decorator';
 
 export interface StageParams{

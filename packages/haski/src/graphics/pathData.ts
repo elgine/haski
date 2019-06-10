@@ -4,8 +4,8 @@
 // https://opensource.org/licenses/MIT
 
 import SubPath from './subPath';
-import PathDrawingStyle from '../base/pathDrawingStyle';
-import { FillStyle } from '../base/fillStyle';
+import PathDrawingStyle from '../core/pathDrawingStyle';
+import { FillStyle } from '../core/fillStyle';
 import Vector2d from '@maths/vector2d';
 
 function updateVec2dArray<T, V>(source: T[], dest: V[], creator: Function, updator: Function, removor?: Function) {

@@ -3,9 +3,9 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import { FillStyle, isPattern, isGradient } from '../../../base/fillStyle';
-import Pattern from '../../../base/pattern';
-import { Gradient, isLinearGradient, LinearGradient, RadialGradient } from '../../../base/gradient';
+import { FillStyle, isPattern, isGradient } from '../../../core/fillStyle';
+import Pattern from '../../../core/pattern';
+import { Gradient, isLinearGradient, LinearGradient, RadialGradient } from '../../../core/gradient';
 import Matrix2d from '@maths/matrix2d';
 import Color from '@maths/color';
 

@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 import Sprite from './sprite';
-import Texture from '../base/texture';
+import Texture from '../core/texture';
 import Signal from '@core/signal';
 
 export interface SpriteFrame{
