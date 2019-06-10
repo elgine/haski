@@ -8,6 +8,7 @@ import RenderObject from '../../../renderObject/renderObject';
 import { AABB2d } from '@maths/bounds';
 import Color from '@maths/color';
 import { getCanvasRenderingContext } from '@utils/canvas';
+import SpriteRenderer from './objectRenderers/spriteRenderer';
 
 export default class CanvasRenderer extends Renderer {
 
@@ -20,6 +21,7 @@ export default class CanvasRenderer extends Renderer {
     constructor(params: RendererParams = {}) {
         super(params);
         this.curCtx = this.ctx = getCanvasRenderingContext(this.rawData);
+        this.addObjRenderer(new SpriteRenderer());
     }
 
     protected _preRender() {
