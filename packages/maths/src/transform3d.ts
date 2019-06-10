@@ -7,8 +7,8 @@ import Vector3d from './vector3d';
 import Matrix3d from './matrix3d';
 import Quaternions from './quaternions';
 import Emitter from '@core/emitter';
-import observable from '@core/observable';
-import computed from '@core/computed';
+import observable, { setObservableInnerValue, getObservableInnerValue } from '@core/observable';
+import computed, { getComputedInnerValue } from '@core/computed';
 
 const composeComponents = {
     translation: [0, 0, 0],
@@ -23,21 +23,28 @@ const compose = (t: Transform3d) => {
     Vector3d.set(t.sx, t.sy, t.sz, composeComponents.scale);
     Quaternions.clone(t.r, composeComponents.rotation);
     Vector3d.set(t.skyz, t.skxz, t.skxy, composeComponents.skew);
-    Matrix3d.recompose(composeComponents, [t.px, t.py, t.pz], t.matrix);
+    let innerMat = getComputedInnerValue(t, 'matrix');
+    let innerInvMat = getComputedInnerValue(t, 'invMatrix');
+    Matrix3d.recompose(composeComponents, [t.px, t.py, t.pz], innerMat);
+    Matrix3d.invert(innerMat, innerInvMat);
 };
 
 const decompose = (t: Transform3d) => {
     Matrix3d.decompose(t.matrix, composeComponents);
-    t.tx = composeComponents.translation[0];
-    t.ty = composeComponents.translation[1];
-    t.tz = composeComponents.translation[2];
-    t.sx = composeComponents.scale[0];
-    t.sy = composeComponents.scale[1];
-    t.sz = composeComponents.scale[2];
-    t.r = composeComponents.rotation;
-    t.skyz = composeComponents.skew[0];
-    t.skxz = composeComponents.skew[1];
-    t.skxy = composeComponents.skew[2];
+    setObservableInnerValue(t, 'tx', composeComponents.translation[0]);
+    setObservableInnerValue(t, 'ty', composeComponents.translation[1]);
+    setObservableInnerValue(t, 'tz', composeComponents.translation[2]);
+
+    setObservableInnerValue(t, 'sx', composeComponents.scale[0]);
+    setObservableInnerValue(t, 'sy', composeComponents.scale[1]);
+    setObservableInnerValue(t, 'sz', composeComponents.scale[2]);
+
+    setObservableInnerValue(t, 'skyz', composeComponents.skew[0]);
+    setObservableInnerValue(t, 'skxz', composeComponents.skew[1]);
+    setObservableInnerValue(t, 'skxy', composeComponents.skew[2]);
+
+    let innerRotation = getObservableInnerValue(t, 'r');
+    Quaternions.clone(composeComponents.rotation, innerRotation);
 };
 
 /**
@@ -95,34 +102,21 @@ export default class Transform3d extends Emitter {
     @computed({ expression: 'updateMatrix' })
     invMatrix: Mat3d = Matrix3d.create();
 
-    protected _locked: boolean = false;
-
     /**
      * Flag matrix need to update
      */
     protected _matrixDirty: boolean = false;
 
     setMatrixDirty(v: boolean = true) {
-        if (this._locked || this._matrixDirty === v) return;
+        if (this._matrixDirty === v) return;
         this._matrixDirty = v;
         if (v) this.emit(Transform3d.ON_MATRIX_DIRTY, this);
     }
-
-    lock() {
-        this._locked = true;
-    }
-
-    unlock() {
-        this._locked = false;
-    }
-
     /**
      * Update translation, scale, rotation according to it's matrix
      */
     updateComponents() {
-        this.lock();
         decompose(this);
-        this.unlock();
     }
 
     /**

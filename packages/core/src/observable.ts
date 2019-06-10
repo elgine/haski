@@ -7,6 +7,14 @@ export interface ObservableParams<T>{
 
 const genObservableKey = (key: string) => `$$observable_${key}`;
 
+export function getObservableInnerValue(target: any, key: string) {
+    return Reflect.get(target, genObservableKey(key));
+}
+
+export function setObservableInnerValue<T>(target: any, key: string, value: T) {
+    Reflect.set(target, genObservableKey(key), value);
+}
+
 export const isObservable = (target: any, key: string) => {
     return Reflect.has(target, genObservableKey(key));
 };

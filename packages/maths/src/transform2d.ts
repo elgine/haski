@@ -5,8 +5,8 @@
 
 import Vector2d from './vector2d';
 import Matrix2d from './matrix2d';
-import computed from '@core/computed';
-import observable from '@core/observable';
+import computed, {getComputedInnerValue} from '@core/computed';
+import observable, {setObservableInnerValue} from '@core/observable';
 import Emitter from '@core/emitter';
 
 const composeComponents = {
@@ -21,19 +21,21 @@ const compose = (t: Transform2d) => {
     Vector2d.set(t.tx, t.ty, composeComponents.translation);
     Vector2d.set(t.sx, t.sy, composeComponents.scale);
     composeComponents.rotation = t.r;
-    Matrix2d.recompose(composeComponents, [t.px, t.py], t.matrix);
-    Matrix2d.invert(t.matrix, t.invMatrix);
+    let innerMat = getComputedInnerValue(t, 'matrix');
+    let innerInvMatrix = getComputedInnerValue(t, 'invMatrix');
+    Matrix2d.recompose(composeComponents, [t.px, t.py], innerMat);
+    Matrix2d.invert(innerMat, innerInvMatrix);
 };
 
 const decompose = (t: Transform2d) => {
     Matrix2d.decompose(t.matrix, composeComponents);
-    t.tx = composeComponents.translation[0];
-    t.ty = composeComponents.translation[1];
-    t.sx = composeComponents.scale[0];
-    t.sy = composeComponents.scale[1];
-    t.skx = composeComponents.skew[0];
-    t.sky = composeComponents.skew[1];
-    t.r = composeComponents.rotation;
+    setObservableInnerValue(t, 'tx', composeComponents.translation[0]);
+    setObservableInnerValue(t, 'ty', composeComponents.translation[1]);
+    setObservableInnerValue(t, 'sx', composeComponents.scale[0]);
+    setObservableInnerValue(t, 'sy', composeComponents.scale[1]);
+    setObservableInnerValue(t, 'r', composeComponents.rotation);
+    setObservableInnerValue(t, 'skx', composeComponents.skew[0]);
+    setObservableInnerValue(t, 'sky', composeComponents.skew[1]);
 };
 
 /**
@@ -79,46 +81,32 @@ export default class Transform2d extends Emitter {
     @computed({ expression: 'updateMatrix' })
     invMatrix: Mat2d = Matrix2d.create();
 
-    protected _locked: boolean = false;
-
     /**
      * Flag matrix need to update
      */
     protected _matrixDirty: boolean = false;
 
     setMatrixDirty(v: boolean = true) {
-        if (this._locked || this._matrixDirty === v) return;
+        if (this._matrixDirty === v) return;
         this._matrixDirty = v;
         if (v) this.emit(Transform2d.ON_MATRIX_DIRTY, this);
-    }
-
-    lock() {
-        this._locked = true;
-    }
-
-    unlock() {
-        this._locked = false;
     }
 
     /**
      * Update translation, scale, rotation according to it's matrix
      */
     updateComponents() {
-        this.lock();
         decompose(this);
-        this.unlock();
     }
 
     /**
      * Update matrix according to translation, scale, rotation vectors
      */
     updateMatrix() {
-        if (!this._matrixDirty || this._locked) return;
-        this.lock();
+        if (!this._matrixDirty) return;
         this.emit(Transform2d.ON_BEFORE_MATRIX_UPDATE, this);
         compose(this);
         this.emit(Transform2d.ON_MATRIX_UPDATED, this);
-        this.unlock();
         this._matrixDirty = false;
         return this.matrix;
     }
@@ -204,15 +192,11 @@ export default class Transform2d extends Emitter {
         this.sx = this.sy = 1;
     }
 
-    set flipX(v: boolean) {
-        if (v) {
-            this.sx *= -1;
-        }
+    flipX() {
+        this.sx *= -1;
     }
 
-    set flipY(v: boolean) {
-        if (v) {
-            this.sy *= -1;
-        }
+    flipY() {
+        this.sy *= -1;
     }
 }

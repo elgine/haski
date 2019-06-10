@@ -4,6 +4,14 @@ export interface ComputedParams<T>{
 
 const genComputedKey = (key: string) => `$$computed_${key}`;
 
+export function getComputedInnerValue(target: any, key: string) {
+    return Reflect.get(target, genComputedKey(key));
+}
+
+export function setComputedInnerValue<T>(target: any, key: string, value: T) {
+    Reflect.set(target, genComputedKey(key), value);
+}
+
 export const isComputed = (target: any, key: string) => {
     return Reflect.has(target, genComputedKey(key));
 };
