@@ -8,11 +8,11 @@ import FillPathData from './fillPathData';
 import PathDrawingStyle, { defaultDrawingStyle } from './pathDrawingStyle';
 
 export default class Graphics extends RenderObject {
-
-    public curveSampleRate: number = 5;
-    public strokeStyle: FillStyle = '#000';
-    public fillStyle: FillStyle = '';
-    public pathDrawingStyle: PathDrawingStyle = defaultDrawingStyle();
+    type = 'graphics';
+    curveSampleRate: number = 5;
+    strokeStyle: FillStyle = '#000';
+    fillStyle: FillStyle = '';
+    pathDrawingStyle: PathDrawingStyle = defaultDrawingStyle();
 
     protected _paths: Path[] = [];
     protected _curPath?: Path;

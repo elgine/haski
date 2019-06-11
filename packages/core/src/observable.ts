@@ -40,7 +40,7 @@ function observable<T>({ setter, equals, onDirty, onGet, onChange }: ObservableP
     const onValDirty = (ctx: any) => {
         if (onDirty) {
             if (typeof onDirty === 'string') {
-                ctx[onDirty]();
+                if (typeof ctx[onDirty] === 'function') { ctx[onDirty]() }
             } else {
                 onDirty();
             }
@@ -57,12 +57,10 @@ function observable<T>({ setter, equals, onDirty, onGet, onChange }: ObservableP
                 let oldVal = Reflect.get(this, key);
                 let newVal;
                 let changed = false;
-                if (typeof v === 'object') {
-                    if (!equals || equals(v, oldVal)) return;
-                    if (setter) {
-                        newVal = setter(v, oldVal);
-                        changed = true;
-                    }
+                if (typeof v === 'object' && oldVal && setter && equals) {
+                    if (equals(v, oldVal)) return;
+                    newVal = setter(v, oldVal);
+                    changed = true;
                 } else if (oldVal !== v) {
                     newVal = v;
                     changed = true;

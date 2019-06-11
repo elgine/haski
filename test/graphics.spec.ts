@@ -30,13 +30,12 @@ window.onload = function() {
         return true;
     };
 
-    describe('global-composition-operation', () => {
-        describe('#source-over', () => {
+    describe('graphics', () => {
+        describe('#fill-rect', () => {
             it('Each pixels should be equal', () => {
                 let g = new Graphics();
                 g.rect(0, 0, 100, 100);
                 g.fill();
-                let stage = new Stage();
                 stage.addChild(g);
                 canvasRenderer.renderStageToTarget(stage);
                 glRenderer.renderStageToTarget(stage);

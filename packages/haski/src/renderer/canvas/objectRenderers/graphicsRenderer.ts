@@ -13,9 +13,9 @@ import { isPattern, isGradient } from '../../../graphics/fillStyle';
 import Pattern from '../../../graphics/pattern';
 import { Gradient, isLinearGradient, LinearGradient, RadialGradient } from '../../../graphics/gradient';
 
-export default class ShapeRenderer implements ObjectRenderer<Graphics> {
+export default class GraphicsRenderer implements ObjectRenderer<Graphics> {
 
-    public readonly name: string = 'shape';
+    public readonly name: string = 'graphics';
 
     render(renderer: CanvasRenderer, graphics: Graphics) {
         const ctx = renderer.curCtx;

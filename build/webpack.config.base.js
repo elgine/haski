@@ -102,7 +102,7 @@ const base = {
     resolve: {
         extensions: ['.tsx', '.ts', '.less', '.css', '.js', '.json'],
         alias: {
-            '@elgame': path.resolve(__dirname, '../engine/src'),
+            '@haski': path.resolve(__dirname, '../engine/src'),
             '@gl-core': path.resolve(__dirname, '../gl-core/src'),
             '@core': path.resolve(__dirname, '../core/src'),
             '@ecs': path.resolve(__dirname, '../ecs/src'),

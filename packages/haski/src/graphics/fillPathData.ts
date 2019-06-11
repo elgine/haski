@@ -18,7 +18,6 @@ interface PolyData{
 export default class FillPathData extends PathData {
 
     protected _doComputeGLData(vertices: Vec2d[], indices: number[]) {
-        super._doComputeGLData(vertices, indices);
         // Wrap subPath
         const polys: PolyData[] = this.subPaths.map((subPath) => {
             return {

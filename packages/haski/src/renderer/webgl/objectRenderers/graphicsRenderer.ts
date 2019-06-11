@@ -16,9 +16,9 @@ import PathData from '../../../graphics/pathData';
 
 const normMat = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 
-export default class ShapeRenderer implements ObjectRenderer<Graphics> {
+export default class GraphicsRenderer implements ObjectRenderer<Graphics> {
 
-    public readonly name: string = 'shape';
+    public readonly name: string = 'graphics';
 
     private _nc: RGBA = [0, 0, 0, 0];
     private _vertexData: number[] = new Array(9000);
