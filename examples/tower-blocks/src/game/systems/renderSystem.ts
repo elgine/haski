@@ -23,7 +23,7 @@ export default (game: Game) => {
         if (game.tweenManager.contains(game.stage.root)) {
             game.tweenManager.remove(game.stage.root);
         }
-        game.tweenManager.animate(game.stage.root, { y: halfH + game.blockManager.topBlock.pos[1] }, 100, undefined, function(camera) {
+        game.tweenManager.animate(game.stage.root, { ty: halfH + game.blockManager.topBlock.pos[1] }, 100, undefined, function(camera) {
             game.tweenManager.remove(game.stage.root);
         });
     }

@@ -1,6 +1,6 @@
 import uuid from 'uuid/v4';
 import computed, { getComputedInnerValue } from '@core/computed';
-import observable from '@core/observable';
+import observable, { getObservableInnerValue } from '@core/observable';
 import Transform2d from '@maths/transform2d';
 import { AABB2d } from '@maths/bounds';
 import Matrix2d from '@maths/matrix2d';
@@ -53,6 +53,7 @@ export default class RenderObject extends Transform2d {
 
     @observable({ onGet: 'computeChildren', onDirty: 'onLocalZIndexDirty' })
     localZIndex: number = 0;
+    $$timeSetLocalZIndex: number = 0;
 
     @computed({ expression: 'computeGlobalZIndex' })
     globalZIndex: number[] = [];
@@ -79,7 +80,6 @@ export default class RenderObject extends Transform2d {
      */
     protected _parent?: RenderObject;
 
-    protected _timeSetLocalZIndex: number = 0;
     protected _worldMatrixDirty = false;
     protected _globalZIndexDirty = false;
     protected _globalOpacityDirty = false;
@@ -129,7 +129,7 @@ export default class RenderObject extends Transform2d {
         this.setGlobalZIndexDirty(true);
     }
 
-    $$_setChildrenOrderDirty(v = true) {
+    $$setChildrenOrderDirty(v = true) {
         if (this._childrenOrderDirty === v) return;
         this._childrenOrderDirty = v;
     }
@@ -140,14 +140,15 @@ export default class RenderObject extends Transform2d {
     }
 
     onLocalZIndexDirty() {
-        this._timeSetLocalZIndex = Date.now();
+        this.$$timeSetLocalZIndex = Date.now();
+        this._parent && this._parent.$$setChildrenOrderDirty();
         this.setGlobalZIndexDirty();
     }
 
     setGlobalZIndexDirty(v = true) {
         if (this._globalZIndexDirty === v) return;
         this._globalZIndexDirty = v;
-        this._parent && this._parent.$$_setChildrenOrderDirty(v);
+        this.setRenderDirty();
     }
 
     setWorldMatrixDirty(v = true) {
@@ -195,16 +196,21 @@ export default class RenderObject extends Transform2d {
     setRenderDirty(v = true) {
         if (this._renderDirty === v) return;
         this._renderDirty = v;
+        if (v) {
+            this.emit(RenderObject.ON_RENDER_DIRTY, this);
+        }
     }
 
     computeChildren() {
         let children = getComputedInnerValue(this, 'children');
         if (this._childrenOrderDirty) {
             children.sort((a, b) => {
-                if (a._localZIndex === b._localZIndex) {
-                    return b._localZIndexChangeTime - a._localZIndexChangeTime;
+                let aZIndex = getObservableInnerValue(a, 'localZIndex');
+                let bZIndex = getObservableInnerValue(b, 'localZIndex');
+                if (aZIndex === bZIndex) {
+                    return b.$$timeSetLocalZIndex - a.$$timeSetLocalZIndex;
                 }
-                return a._localZIndex - b._localZIndex;
+                return aZIndex - bZIndex;
             }).forEach((child, i) => {
                 child.localZIndex = i;
             });

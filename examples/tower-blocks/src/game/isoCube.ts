@@ -65,7 +65,7 @@ export default class IsoCube extends Graphics {
 
     constructor(width: number = 10, height: number = 10, depth: number = 10) {
         super();
-        this.on(IsoCube.ON_MATRIX_DIRTY, this._onMatrix3dDirty.bind(this));
+        this.transform.on(IsoCube.ON_MATRIX_DIRTY, this._onMatrix3dDirty.bind(this));
         this.size.on(Size3d.ON_CHANGE, this._onSizeChanged.bind(this));
         this.size.width = width;
         this.size.height = height;

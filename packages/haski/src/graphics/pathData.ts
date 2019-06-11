@@ -70,6 +70,8 @@ export default class PathData {
         this._glDataDirty = false;
         const innerGLIndices = getComputedInnerValue(this, 'glIndices');
         const innerGLVertices = getComputedInnerValue(this, 'glVertices');
+        innerGLVertices.length = 0;
+        innerGLIndices.length = 0;
         this._doComputeGLData(innerGLVertices, innerGLIndices);
     }
 

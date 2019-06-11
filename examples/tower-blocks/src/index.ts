@@ -112,7 +112,7 @@ window.onload = function() {
     let h = window.innerHeight;
     game = new Game({
         renderer: {
-            type: RendererType.CANVAS,
+            type: RendererType.WEBGL,
             el: document.getElementById('canvas') as HTMLCanvasElement,
             size: { width: w, height: h },
             fixResolution: true

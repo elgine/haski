@@ -123,6 +123,8 @@ export default class Transform3d extends Emitter {
      * Update matrix according to translation, scale, rotation vectors
      */
     computeMatrix() {
+        if (!this._matrixDirty) return;
+        this._matrixDirty = false;
         this.emit(Transform3d.ON_BEFORE_MATRIX_UPDATE, this);
         compose(this);
         this.emit(Transform3d.ON_MATRIX_UPDATED, this);

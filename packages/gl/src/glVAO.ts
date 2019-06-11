@@ -83,7 +83,7 @@ export default class GLVAO {
                     // for (let i = 0; i < indiceCount; i++) {
                     //     this._indiceBuffer[this._indiceCount + i] = indices[i] + this._vertexCount;
                     // }
-                    this._indiceBuffer.set(indices.slice(0, indiceCount).map(v => v + this._vertexCount), this._vertexCount);
+                    this._indiceBuffer.set(indices.slice(0, indiceCount).map(v => v + this._vertexCount), this._indiceCount);
                     this._indiceCount += indiceCount;
                 }
             }

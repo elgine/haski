@@ -61,7 +61,6 @@ export default (game: Game) => {
             { discard.rotation[0] = 1 }
             if (delta > 0) {
                 discard.view.localZIndex = 0;
-                console.log(game.stage.root.children[0] === discard.view);
             }
             game.onLevelChange.emit(game.blockManager.placeTargetBlock());
         }
