@@ -9,6 +9,7 @@ import { AABB2d } from '@maths/bounds';
 import Color from '@maths/color';
 import { getCanvasRenderingContext } from '@utils/canvas';
 import SpriteRenderer from './objectRenderers/spriteRenderer';
+import GraphicsRenderer from './objectRenderers/graphicsRenderer';
 
 export default class CanvasRenderer extends Renderer {
 
@@ -22,6 +23,7 @@ export default class CanvasRenderer extends Renderer {
         super(params);
         this.curCtx = this.ctx = getCanvasRenderingContext(this.rawData);
         this.addObjRenderer(new SpriteRenderer());
+        this.addObjRenderer(new GraphicsRenderer());
     }
 
     protected _preRender() {
@@ -37,6 +39,7 @@ export default class CanvasRenderer extends Renderer {
         const m = node.worldMatrix;
         this.curCtx.save();
         this.curCtx.globalAlpha = node.globalOpacity;
+        this.curCtx.globalCompositeOperation = node.compositionOperation;
         this.curCtx.transform(m[0], m[1], m[3], m[4], m[2], m[5]);
         this._objRendererMap[node.type].render(this, node);
         this.curCtx.restore();

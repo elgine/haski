@@ -17,8 +17,8 @@ interface PolyData{
 
 export default class FillPathData extends PathData {
 
-    protected _updateGLData() {
-        super._updateGLData();
+    protected _doComputeGLData(vertices: Vec2d[], indices: number[]) {
+        super._doComputeGLData(vertices, indices);
         // Wrap subPath
         const polys: PolyData[] = this.subPaths.map((subPath) => {
             return {
@@ -59,10 +59,8 @@ export default class FillPathData extends PathData {
                 holes.push(coords.length);
                 Array.prototype.push.apply(coords, child.vertices);
             });
-            Array.prototype.push.apply(this._glVertices, coords);
-            earcut(flatArr(coords).map(Number), holes).forEach((i) => {
-                this._glIndices.push(i + vertexCount);
-            });
+            Array.prototype.push.apply(vertices, coords);
+            Array.prototype.push.apply(indices, earcut(flatArr(coords).map(Number), holes).map((i) => (i + vertexCount)));
             vertexCount += coords.length;
         };
         root.forEach(process);

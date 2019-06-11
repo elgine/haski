@@ -3,10 +3,12 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-import SubPath from './subPath';
-import PathDrawingStyle from '../core/pathDrawingStyle';
-import { FillStyle } from '../core/fillStyle';
+
 import Vector2d from '@maths/vector2d';
+import computed, { getComputedInnerValue } from '@core/computed';
+import SubPath from './subPath';
+import PathDrawingStyle from './pathDrawingStyle';
+import { FillStyle } from './fillStyle';
 
 function updateVec2dArray<T, V>(source: T[], dest: V[], creator: Function, updator: Function, removor?: Function) {
     const sourceLen = source.length;
@@ -33,62 +35,55 @@ export enum PathDataType{
 }
 
 export default class PathData {
-    public readonly type: PathDataType = PathDataType.FILL;
-    public wm: Mat2d;
-    public subPaths: SubPath[];
-    public drawingStyle!: PathDrawingStyle;
-    public fillStyle!: FillStyle;
-    protected _glVertices: Vec2d[] = [];
-    protected _glWorldVertices: Vec2d[] = [];
-    protected _glIndices: number[] = [];
+
+    readonly type: PathDataType = PathDataType.FILL;
+    readonly matrix: Mat2d;
+    subPaths: SubPath[];
+    drawingStyle!: PathDrawingStyle;
+    fillStyle!: FillStyle;
+
+    @computed({ expression: 'computeGLData' })
+    glVertices: Vec2d[] = [];
+
+    @computed({ expression: 'computeGLData' })
+    glIndices: number[] = [];
+
+    @computed({ expression: 'computeGLWorldVertices' })
+    glWorldVertices: Vec2d[] = [];
+
     protected _glDataDirty: boolean = true;
     protected _glWorldVerticesDirty: boolean = true;
 
-    constructor(wm: Mat2d, subPaths: SubPath[]) {
-        this.wm = wm;
+    constructor(mat: Mat2d, subPaths: SubPath[], fillStyle?: FillStyle, drawingStyle?: PathDrawingStyle) {
+        this.matrix = mat;
         this.subPaths = subPaths;
+        if (fillStyle) this.fillStyle = fillStyle;
+        if (drawingStyle) this.drawingStyle = drawingStyle;
     }
 
     setWorldVerticesDirty(v: boolean) {
         this._glWorldVerticesDirty = v;
     }
 
-    protected _makesureGLDataNewest() {
-        if (this._glDataDirty) {
-            this._updateGLData();
-            this._glDataDirty = false;
-        }
+    computeGLData() {
+        if (!this._glDataDirty) return;
+        this._glDataDirty = false;
+        const innerGLIndices = getComputedInnerValue(this, 'glIndices');
+        const innerGLVertices = getComputedInnerValue(this, 'glVertices');
+        this._doComputeGLData(innerGLVertices, innerGLIndices);
     }
 
-    protected _updateGLData() {
-        this._glIndices.length = 0;
-        this._glVertices.length = 0;
-    }
-
-    protected _updateGLWorldVertices() {
-        updateVec2dArray(this.glVertices, this._glWorldVertices, () => [0, 0], (source: Vec2d, dest: Vec2d) => {
+    computeGLWorldVertices() {
+        if (!this._glWorldVerticesDirty) return;
+        this._glWorldVerticesDirty = false;
+        const innerGLWorldVertices = getComputedInnerValue(this, 'glWorldVertices');
+        updateVec2dArray(this.glVertices, innerGLWorldVertices, () => [0, 0], (source: Vec2d, dest: Vec2d) => {
             Vector2d.clone(source, dest);
-            if (this.wm) {
-                Vector2d.transform(dest, this.wm);
-            }
+            Vector2d.transform(dest, this.matrix);
         });
     }
 
-    get glIndices() {
-        this._makesureGLDataNewest();
-        return this._glIndices;
-    }
+    protected _doComputeGLData(vertices: Vec2d[], indices: number[]) {
 
-    get glVertices() {
-        this._makesureGLDataNewest();
-        return this._glVertices;
-    }
-
-    get glWorldVertices() {
-        if (this._glWorldVerticesDirty) {
-            this._updateGLWorldVertices();
-            this._glWorldVerticesDirty = false;
-        }
-        return this._glWorldVertices;
     }
 }

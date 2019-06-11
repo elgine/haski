@@ -33,6 +33,8 @@ export default class RenderObject extends Transform2d {
     name: string = 'undefined';
     type: string = 'undefined';
 
+    compositionOperation: string = 'source-over';
+
     @computed({ expression: 'computeLocalBounds' })
     localBounds: AABB2d = new AABB2d();
 
@@ -345,8 +347,8 @@ export default class RenderObject extends Transform2d {
 
     }
 
-    protected _doComputeWorldBounds(bounds: AABB2d, target: AABB2d) {
-        getComputedInnerValue(this, 'worldBounds').clone(this.localBounds).transform(this.matrix);
+    protected _doComputeWorldBounds(local: AABB2d, target: AABB2d) {
+        target.clone(local).transform(this.matrix);
     }
 
     protected _doComputeWorldMatrix(innerMat: Mat2d, innerInvMat: Mat2d) {

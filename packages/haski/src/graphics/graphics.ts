@@ -1,82 +1,63 @@
-// Copyright (c) 2019 elgine
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
-
+import { AABB2d } from '@maths/bounds';
+import RenderObject from '../core/renderObject';
+import { FillStyle } from './fillStyle';
+import PathData from './pathData';
 import Path from './path';
-import { FillStyle } from '../core/fillStyle';
-import GraphicsData from './graphicsData';
+import StrokePathData from './strokePathData';
+import FillPathData from './fillPathData';
+import PathDrawingStyle, { defaultDrawingStyle } from './pathDrawingStyle';
 
-export default class Graphics {
+export default class Graphics extends RenderObject {
 
-    public readonly graphicsData: GraphicsData;
-
-    /**
-     * Pixels sample-rate in curve
-     */
     public curveSampleRate: number = 5;
+    public strokeStyle: FillStyle = '#000';
+    public fillStyle: FillStyle = '';
+    public pathDrawingStyle: PathDrawingStyle = defaultDrawingStyle();
 
-    private _lineWidth: number = 1;
+    protected _paths: Path[] = [];
+    protected _curPath?: Path;
+    protected _pathDatas: PathData[] = [];
 
-    private _miterLimit: number = 10;
+    private _maxLineWidth: number = 1;
 
-    /**
-     * Line cap style
-     */
-    private _lineCap: CanvasLineCap = 'butt';
+    setWorldMatrixDirty(v = true) {
+        super.setWorldMatrixDirty(v);
+        v && this._notifyPathDatasWorldVerticesDirty();
+    }
 
-    /**
-     * line join style
-     */
-    private _lineJoin: CanvasLineJoin = 'miter';
+    stroke(fillStyle?: FillStyle, pathDrawingStyle?: PathDrawingStyle) {
+        if (fillStyle) this.strokeStyle = fillStyle;
+        if (pathDrawingStyle) {
+            this.pathDrawingStyle = pathDrawingStyle;
+            this._maxLineWidth = Math.max(this.pathDrawingStyle.lineWidth, this._maxLineWidth);
+        }
+        if (!this._curPath) return this;
+        this._pathDatas.push(new StrokePathData(this.worldMatrix, this._curPath.subPaths, this.strokeStyle, this.pathDrawingStyle));
+        this.setLocalBoundsDirty(true);
+        this.setRenderDirty(true);
+        return this;
+    }
 
-    /**
-     * Stroke style
-     */
-    private _strokeStyle: FillStyle = '#000';
-
-    /**
-     * Fill style
-     */
-    private _fillStyle: FillStyle = '#000';
-
-    private _paths: Path[] = [];
-    private _curPath?: Path;
-
-    constructor(graphicsData: GraphicsData) {
-        this.graphicsData = graphicsData;
+    fill(fillStyle?: FillStyle, path?: Path) {
+        if (fillStyle) this.fillStyle = fillStyle;
+        path = path || this._curPath;
+        if (!path) return path;
+        this._pathDatas.push(new FillPathData(this.worldMatrix, path.subPaths, this.fillStyle));
+        this.setLocalBoundsDirty(true);
+        this.setRenderDirty(true);
+        return this;
     }
 
     beginPath() {
         this._newPath();
-    }
-
-    stroke(strokeStyle?: FillStyle, lineWidth?: number, lineCap?: CanvasLineCap, lineJoin?: CanvasLineJoin, miterLimit?: number, dash?: number[]) {
-        this._strokeStyle = strokeStyle || this._strokeStyle;
-        this._lineWidth = lineWidth || this._lineWidth;
-        this._lineCap = lineCap || this._lineCap;
-        this._lineJoin = lineJoin || this._lineJoin;
-        this._miterLimit = miterLimit || this._miterLimit;
-        if (!this._curPath) return;
-        if (this._lineWidth > 0) { this.graphicsData.stroke(this._curPath, this._strokeStyle, {
-            lineWidth: this._lineWidth,
-            lineCap: this._lineCap,
-            lineJoin: this._lineJoin,
-            miterLimit: this._miterLimit
-        }); }
-    }
-
-    fill(fillStyle?: FillStyle, path?: Path) {
-        this._fillStyle = fillStyle || this._fillStyle;
-        path = path || this._curPath;
-        if (!path) return;
-        this.graphicsData.fill(path, this._fillStyle);
+        return this;
     }
 
     closePath() {
         if (this._curPath) {
             this._curPath.closePath();
         }
+        return this;
     }
 
     moveTo(x: number, y: number) {
@@ -143,9 +124,27 @@ export default class Graphics {
     }
 
     clear() {
-        this.graphicsData.clear();
+        this._pathDatas.length = 0;
         this._paths.length = 0;
         this._curPath = undefined;
+        this.pathDrawingStyle = defaultDrawingStyle();
+        this.strokeStyle = '#000';
+        this.fillStyle = '#000';
+        this._maxLineWidth = 1;
+        return this;
+    }
+
+    protected _doComputeLocalBounds(target: AABB2d) {
+        target.compose(this._pathDatas.reduce((va, pathData) => {
+            return pathData.subPaths.reduce((va, subPath) => {
+                Array.prototype.push.apply(va, subPath.vertices);
+                return va;
+            }, va);
+        }, [] as Vec2d[])).padding(this._maxLineWidth);
+    }
+
+    protected _doComputeWorldBounds(local: AABB2d, target: AABB2d) {
+        target.clone(local).padding(-this._maxLineWidth).transform(this.worldMatrix).padding(this._maxLineWidth);
     }
 
     private _newPath() {
@@ -157,7 +156,15 @@ export default class Graphics {
         if (!this._curPath) this._newPath();
     }
 
+    private _notifyPathDatasWorldVerticesDirty() {
+        this._pathDatas.forEach(pathData => pathData.setWorldVerticesDirty(true));
+    }
+
     get paths() {
         return this._paths;
+    }
+
+    get pathDatas() {
+        return this._pathDatas;
     }
 }

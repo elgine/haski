@@ -16,6 +16,7 @@ import { patternVS, patternFS } from './shaders/pattern';
 import { gradientVS, gradientFS } from './shaders/gradient';
 
 import SpriteRenderer from './objectRenderers/spriteRenderer';
+import GraphicsRenderer from './objectRenderers/graphicsRenderer';
 
 const GL = WebGLRenderingContext;
 const compositionBlendFunMap: Dictionary<number[]> = {
@@ -77,6 +78,7 @@ export default class GLRenderer extends Renderer {
         this.setCompositionBlend('source-over');
 
         this.addObjRenderer(new SpriteRenderer());
+        this.addObjRenderer(new GraphicsRenderer());
     }
 
     /**
@@ -112,6 +114,7 @@ export default class GLRenderer extends Renderer {
     }
 
     protected _renderNode(node: RenderObject) {
+        this.setCompositionBlend(node.compositionOperation);
         this._objRendererMap[node.type].render(this, node);
     }
 
