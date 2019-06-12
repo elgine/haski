@@ -6,7 +6,6 @@
 import Game from './game/game';
 import RendererType from '@haski/renderer/rendererType';
 import keyboardName from '@haski/input/keyboardName';
-import './index.less';
 
 let game: Game;
 let tips: HTMLElement|null;
