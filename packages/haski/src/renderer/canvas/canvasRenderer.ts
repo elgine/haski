@@ -40,7 +40,7 @@ export default class CanvasRenderer extends Renderer {
         this.curCtx.save();
         this.curCtx.globalAlpha = node.globalOpacity;
         this.curCtx.globalCompositeOperation = node.compositionOperation;
-        this.curCtx.transform(m[0], m[1], m[3], m[4], m[2], m[5]);
+        this.curCtx.transform(m[0], m[3], m[1], m[4], m[2], m[5]);
         this._objRendererMap[node.type].render(this, node);
         this.curCtx.restore();
     }
@@ -62,7 +62,7 @@ export default class CanvasRenderer extends Renderer {
         this.curCtx.clip();
     }
 
-    protected _applyViewMatrix(vm: Mat2d) {
-        this.curCtx.transform(vm[0], vm[1], vm[3], vm[4], vm[2], vm[5]);
+    protected _applyViewMatrix(m: Mat2d) {
+        this.curCtx.transform(m[0], m[3], m[1], m[4], m[2], m[5]);
     }
 }

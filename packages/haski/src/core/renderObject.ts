@@ -354,7 +354,7 @@ export default class RenderObject extends Transform2d {
     }
 
     protected _doComputeWorldBounds(local: AABB2d, target: AABB2d) {
-        target.clone(local).transform(this.matrix);
+        target.clone(local).transform(this.worldMatrix);
     }
 
     protected _doComputeWorldMatrix(innerMat: Mat2d, innerInvMat: Mat2d) {

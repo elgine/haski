@@ -138,10 +138,25 @@ export default class Slot extends dragonBones.Slot {
 
     protected _updateTransform(): void {
         this.updateGlobalTransform(); // Update transform.
-        const gm = this.globalTransformMatrix;
-        this._renderDisplay.setMatrix([gm.a, gm.c, gm.tx, gm.b, gm.d, gm.ty, 0, 0, 1]);
-        this._renderDisplay.tx = gm.tx - (gm.a * this._pivotX + gm.c * this._pivotY);
-        this._renderDisplay.ty = gm.ty - (gm.b * this._pivotX + gm.d * this._pivotY);
+        const transform = this.global;
+        if (this._renderDisplay === this._rawDisplay || this._renderDisplay === this._meshDisplay) {
+            const x = transform.x - (this.globalTransformMatrix.a * this._pivotX + this.globalTransformMatrix.c * this._pivotY);
+            const y = transform.y - (this.globalTransformMatrix.b * this._pivotX + this.globalTransformMatrix.d * this._pivotY);
+            this._renderDisplay.tx = x;
+            this._renderDisplay.ty = y;
+            this._renderDisplay.r = transform.rotation;
+            (this._renderDisplay as any).skew = transform.skew;
+            this._renderDisplay.sx = transform.scaleX * this._textureScale;
+            this._renderDisplay.sy = transform.scaleY * this._textureScale;
+        }
+        else {
+            this._renderDisplay.tx = transform.x;
+            this._renderDisplay.ty = transform.y;
+            this._renderDisplay.r = transform.rotation;
+            (this._renderDisplay as any).skew = transform.skew;
+            this._renderDisplay.sx = transform.scaleX * this._textureScale;
+            this._renderDisplay.sy = transform.scaleY * this._textureScale;
+        }
     }
 
     protected _identityTransform(): void {
