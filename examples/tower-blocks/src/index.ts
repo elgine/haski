@@ -9,9 +9,9 @@ import keyboardName from '@haski/input/keyboardName';
 import './index.less';
 
 let game: Game;
-let tips: HTMLElement;
-let score: HTMLElement;
-let playBtn: HTMLButtonElement;
+let tips: HTMLElement|null;
+let score: HTMLElement|null;
+let playBtn: HTMLElement|null;
 
 const slideDown = (dom: HTMLElement) => {
     if (dom.classList.contains('slide-up')) {
@@ -73,35 +73,15 @@ const onGameControlChanged = (keys: number[]) => {
 };
 
 const initializeDOM = () => {
-    let pane: HTMLElement; let
-        dom: HTMLElement;
-    dom = document.createElement('canvas');
-    if (dom) {
-        dom.id = 'canvas';
-        document.body.appendChild(dom);
-    }
-
-    pane = document.createElement('div');
-    pane.id = 'pane';
-    tips = document.createElement('p');
-    if (tips) {
-        tips.id = 'tips';
-        slideUp(tips);
-        pane.appendChild(tips);
-    }
-    playBtn = document.createElement('button');
-    if (playBtn && playBtn instanceof HTMLButtonElement) {
-        playBtn.id = 'play-btn';
-        playBtn.innerText = 'Start';
+    playBtn = document.getElementById('play-btn');
+    if (playBtn) {
         playBtn.addEventListener('click', onPlayBtnClick);
-        pane.appendChild(playBtn);
     }
-    document.body.appendChild(pane);
-    score = document.createElement('div');
-    if (score) {
-        score.id = 'score';
-        document.body.appendChild(score);
-    }
+    score = document.getElementById('score');
+    tips = document.getElementById('tips');
+};
+
+const captureSizeChange = () => {
     window.addEventListener('resize', onSizeChanged);
     onSizeChanged();
 };
@@ -124,5 +104,6 @@ window.onload = function() {
     game.setParams({
         backgroundColor: '#D0CBC7'
     });
+    captureSizeChange();
     game.run();
 };

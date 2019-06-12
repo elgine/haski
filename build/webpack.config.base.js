@@ -15,14 +15,6 @@ const plugins = [
     new webpack.optimize.OccurrenceOrderPlugin()
 ];
 
-plugins.push(new HtmlWebpackPlugin({
-    title: config.title,
-    filename: 'index.html',
-    hash: true,
-    inject: true,
-    templateContent: htmlTemplate(isDev())
-}));
-
 if (isDev()) {
     env = {
         devtool: 'source-map',
@@ -91,7 +83,6 @@ if (isDev()) {
 }
 
 const base = {
-    entry: path.resolve(__dirname, '../src/renderer/index.tsx'),
     output: {
         path: config.outputDir,
         filename: '[name].[hash].js',
@@ -182,4 +173,25 @@ const base = {
     },
     plugins
 };
-module.exports = merge(base, env);
+
+
+module.exports = ({ html } = {}) => {
+    let htmlOptions = {};
+    if (html) {
+        if (html.template) {
+            htmlOptions.template = html.template;
+        } else if (html.templateContent) {
+            htmlOptions.templateContent = html.templateContent;
+        } else {
+            htmlOptions.templateContent = htmlTemplate(isDev());
+        }
+    }
+    base.plugins.push(new HtmlWebpackPlugin({
+        title: config.title,
+        filename: 'index.html',
+        hash: true,
+        inject: true,
+        ...htmlOptions
+    }));
+    return merge(base, env);
+};

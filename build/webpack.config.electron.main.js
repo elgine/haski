@@ -10,4 +10,4 @@ module.exports = {
     },
     mode: getWebpackMode(),
     target: 'electron-main'
-}
+};

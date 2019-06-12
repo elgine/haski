@@ -4,7 +4,8 @@
   "description": "2d slight game engine",
   "scripts": {
     "test": "TS_NODE_PROJECT='./tsconfig.node.json' mocha test/**/*.spec.ts",
-    "tower-blocks": "cross-env NODE_ENV=development webpack-dev-server --entry ./examples/tower-blocks/src/index.ts --config ./build/webpack.config.base.js",
+    "tower-blocks": "cross-env NODE_ENV=development webpack-dev-server --config ./examples/tower-blocks/webpack.config.js",
+    "couple-daily": "cross-env NODE_ENV=development webpack-dev-server --config ./examples/couple-daily/webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.config.base.js"
   },
   "repository": {

@@ -64,11 +64,12 @@ export default class Sprite extends RenderObject {
     protected _glWorldVerticesDirty: boolean = false;
     protected _glTexCoordsDirty: boolean = false;
 
-    constructor(texture?: Texture) {
+    constructor(texture?: Texture, texBounds?: IAABB2d) {
         super();
         this.textureRegion.on(Region.ON_CHANGE, this._onTextureRegionChanged);
         this.size.on(Size.ON_CHANGE, this._onSizeChanged);
         if (texture) { this.texture = texture }
+        if (texBounds) { this.textureRegion.clone(texBounds) }
     }
 
     computeTintTexture() {

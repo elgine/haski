@@ -1,4 +1,4 @@
-module.exports = (DEBUG, SSR, html = '', innerScript = '', scriptTags = '', linkTags = '', styleTags = '') => {
+module.exports = (DEBUG, html = '', innerScript = '', scriptTags = '', linkTags = '', styleTags = '') => {
     return `
         <!DOCTYPE html>
         <html lang="en">
@@ -26,7 +26,6 @@ module.exports = (DEBUG, SSR, html = '', innerScript = '', scriptTags = '', link
         </body>
         <script>
             window.__DEBUG__ = ${DEBUG};
-            window.__SSR__ = ${SSR};
             ${innerScript}
         </script>
         ${scriptTags}
