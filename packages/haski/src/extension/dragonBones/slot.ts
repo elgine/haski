@@ -50,6 +50,7 @@ export default class Slot extends dragonBones.Slot {
 
     protected _addDisplay(): void {
         const container = this._armature.display as ArmatureDisplay;
+        this._renderDisplay.name = this.name;
         container.addChild(this._renderDisplay);
     }
 

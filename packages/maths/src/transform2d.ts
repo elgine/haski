@@ -158,7 +158,7 @@ export default class Transform2d extends Emitter {
         this.py = v[1];
     }
 
-    translate(x: number|Vec2d, y?: number) {
+    translate(x: number|Vec2d) {
         if (typeof x === 'number') {
             this.tx += x;
             this.ty += x;
@@ -168,7 +168,7 @@ export default class Transform2d extends Emitter {
         }
     }
 
-    scale(x: number|Vec2d, y?: number) {
+    scale(x: number|Vec2d) {
         if (typeof x === 'number') {
             this.sx *= x;
             this.sy *= x;
