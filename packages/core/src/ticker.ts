@@ -39,7 +39,14 @@ export default class Ticker {
 
     private _tickTime: number;
 
+    // In order to prevent the situation that requestAnimationFrame
+    // will be suspensed when browser window is inactive, so capture
+    // both requestAnimationFrame and setTimeout to make sure ticking
+    // and remove ticker ortimer when another is reached.
+    // RequestAnimationFrame ticker id
     private _tickerId: number = -1;
+    // SetTimeout timer id
+    private _timerId: number = -1;
 
     /**
      * Time-stamp from start time-stamp
@@ -122,12 +129,30 @@ export default class Ticker {
             this._isRunning && this._cb && this._cb(this);
             this._tickTime -= this._intervalPerSec;
         }
-        if (this._isRunning) { this._tickerId = requestAnimationFrame(this._run) }
+        if (this._isRunning) {
+            this._tick();
+        }
     }
 
     stop() {
         this._isRunning = false;
+        this._cancelTick();
+    }
+
+    private _tick() {
+        this._tickerId = requestAnimationFrame(() => {
+            clearTimeout(this._timerId);
+            this._run();
+        });
+        this._timerId = window.setTimeout(() => {
+            cancelAnimationFrame(this._tickerId);
+            this._run();
+        }, 1000 / 60);
+    }
+
+    private _cancelTick() {
         cancelAnimationFrame(this._tickerId);
+        clearTimeout(this._timerId);
     }
 
     get isRunning() {
