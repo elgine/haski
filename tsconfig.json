@@ -5,7 +5,7 @@
         "./dragonBones/**/*",
         "./typings/**/*",
         "./examples/**/*",
-        "./test/**/*", "examples/sprite.ts"
+        "./test/**/*"
     ],
     "compilerOptions": {
         "typeRoots": ["./node_modules/@types", "./typings", "**/typings/**/*"],
