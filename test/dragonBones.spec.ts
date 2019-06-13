@@ -21,7 +21,7 @@ window.onload = async function() {
     factory.parseTextureAtlasData(atlasData, texture);
 
     let stage = new Stage();
-    let rendererResult = rendererFactory({ type: RendererType.WEBGL, size: { width: 1920, height: 1080 }});
+    let rendererResult = rendererFactory({ type: RendererType.CANVAS, size: { width: 1920, height: 1080 }});
     if (!rendererResult) return;
     let renderer = rendererResult;
     document.body.appendChild(renderer.rawData);
