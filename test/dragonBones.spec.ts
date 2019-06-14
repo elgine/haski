@@ -3,18 +3,29 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
+// Copyright (c) 2019 elgine
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
 import Texture from '@haski/core/texture';
 import Factory from '@haski/extension/dragonBones/factory';
 import Ticker from '@core/ticker';
 import Stage from '@haski/core/stage';
 import rendererFactory from '@haski/renderer/rendererFactory';
 import RendererType from '@haski/renderer/rendererType';
+let texUrl = 'dragonBones/demon/Demon_tex.png';
+let dataUrl = 'dragonBones/demon/Demon_ske.json';
+let atlasUrl = 'dragonBones/demon/Demon_tex.json';
+
+let skeName = 'Demon';
+let defaultAni = 'run';
 
 window.onload = async function() {
 
-    let texture = await Texture.get('dragonBones/dragon_boy/Dragon_tex.png');
-    let dataDB = await fetch('dragonBones/dragon_boy/Dragon_ske.json').then(r => r.json());
-    let atlasData = await fetch('dragonBones/dragon_boy/Dragon_tex.json').then(r => r.json());
+    let texture = await Texture.get(texUrl);
+    let dataDB = await fetch(dataUrl).then(r => r.json());
+    let atlasData = await fetch(atlasUrl).then(r => r.json());
 
     const factory = Factory.factory;
     factory.parseDragonBonesData(dataDB);
@@ -26,9 +37,9 @@ window.onload = async function() {
     let renderer = rendererResult;
     document.body.appendChild(renderer.rawData);
 
-    const armatureDisplay = factory.buildArmatureDisplay('Dragon');
+    const armatureDisplay = factory.buildArmatureDisplay(skeName);
     if (armatureDisplay) {
-        armatureDisplay.animation.play('walk');
+        armatureDisplay.animation.play(defaultAni);
         armatureDisplay.tx = 400;
         armatureDisplay.ty = 400;
         stage.addChild(armatureDisplay);
