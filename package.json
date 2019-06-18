@@ -8,6 +8,7 @@
     "tower-blocks": "cross-env NODE_ENV=development webpack-dev-server --config ./examples/tower-blocks/webpack.config.js",
     "couple-daily": "cross-env NODE_ENV=development webpack-dev-server --config ./examples/couple-daily/webpack.config.js",
     "test:canvasAndWebGL": "cross-env NODE_ENV=development webpack-dev-server --entry ./test/canvasAndWebGL.spec.ts --config ./build/webpack.config.base.js",
+    "test:particle": "cross-env NODE_ENV=development webpack-dev-server --config ./build/webpack.config.base.js --entry ./test/particle.spec.ts",
     "build": "cross-env NODE_ENV=production webpack --config ./build/webpack.config.base.js"
   },
   "repository": {

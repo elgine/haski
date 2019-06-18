@@ -2,7 +2,7 @@ import Stage from '@haski/core/stage';
 import Ticker from '@core/ticker';
 import CanvasRenderer from '@haski/renderer/canvas/canvasRenderer';
 import GLRenderer from '@haski/renderer/webgl/glRenderer';
-import ParticeleEmitter from '@haski/extension/particle/particleEmitter';
+import ParticleEmitter from '@haski/extension/particle/particleEmitter';
 import ParticleCanvasRenderer from '@haski/extension/particle/renderer/canvas/particleEmitterRenderer';
 import ParticleWebGLRenderer from '@haski/extension/particle/renderer/webgl/particleEmitterRenderer';
 
@@ -13,18 +13,52 @@ window.onload = function() {
     canvasRenderer.addObjRenderer(new ParticleCanvasRenderer());
     glRenderer.addObjRenderer(new ParticleWebGLRenderer());
 
-    let emitter = new ParticeleEmitter();
-    emitter.set({
+    let spark = new ParticleEmitter();
+    stage.addChild(spark);
+    spark.set({
+        position: [20, 20],
+        rotation: [
+            { time: 0, value: -Math.PI * 0.5, delta: Math.PI * 0.01 }
+        ],
+        speed: { value: 0.5, delta: 0.5 },
+
+        tangentialAccel: [
+            { time: 0, value: 0.01, delta: 0.01 }
+        ],
         duration: -1
     });
-    emitter.tx = 200;
-    emitter.ty = 200;
-    emitter.run();
-    stage.addChild(emitter);
+    spark.tx = 200;
+    spark.ty = 200;
+    spark.run();
+
+    let negative1 = new ParticleEmitter();
+    negative1.compositionOperation = 'lighter';
+    negative1.set({
+
+    });
+    stage.addChild(negative1);
+
+    let negative2 = new ParticleEmitter();
+    negative2.set({
+
+    });
+    stage.addChild(negative2);
+
+    let yellow = new ParticleEmitter();
+    stage.addChild(yellow);
+
+    let orange = new ParticleEmitter();
+    stage.addChild(orange);
+
+    let red = new ParticleEmitter();
+    stage.addChild(red);
+
+    let white = new ParticleEmitter();
+    stage.addChild(white);
 
     let ticker = new Ticker();
     ticker.cb = function() {
-        emitter.tick(ticker.dt);
+        spark.tick(ticker.dt);
         canvasRenderer.renderStageToTarget(stage);
         glRenderer.renderStageToTarget(stage);
     };
