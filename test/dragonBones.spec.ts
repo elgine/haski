@@ -21,6 +21,8 @@ let atlasUrl = 'dragonBones/demon/Demon_tex.json';
 let skeName = 'Demon';
 let defaultAni = 'normalAttack';
 
+let attack = 'normalAttack';
+
 window.onload = async function() {
 
     let texture = await Texture.get(texUrl);
@@ -39,7 +41,7 @@ window.onload = async function() {
 
     const armatureDisplay = factory.buildArmatureDisplay(skeName);
     if (armatureDisplay) {
-        armatureDisplay.animation.play(defaultAni, 0);
+        armatureDisplay.animation.play(attack, 0);
         armatureDisplay.tx = 400;
         armatureDisplay.ty = 400;
         stage.addChild(armatureDisplay);

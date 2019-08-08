@@ -80,19 +80,11 @@ export default class GLVAO {
             if (this._useElement) {
                 if (indiceCount <= 0) return;
                 if (indices) {
-                    // for (let i = 0; i < indiceCount; i++) {
-                    //     this._indiceBuffer[this._indiceCount + i] = indices[i] + this._vertexCount;
-                    // }
                     this._indiceBuffer.set(indices.slice(0, indiceCount).map(v => v + this._vertexCount), this._indiceCount);
                     this._indiceCount += indiceCount;
                 }
             }
             if (vertexCount <= 0) return;
-            // for (let i = 0; i < vertexCount; i++) {
-            //     for (let j = 0; j < this._unitSize; j++) {
-            //         this._vertexBuffer[(this._vertexCount + i) * this._unitSize + j] = vertexData[i * this._unitSize + j];
-            //     }
-            // }
             this._vertexBuffer.set(vertexData.slice(0, vertexDataCount), this._vertexCount * this._unitSize);
             this._vertexCount += vertexCount;
         } else {
